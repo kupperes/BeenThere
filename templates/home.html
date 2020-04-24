@@ -1,25 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Been There</title>
-</head>
-<body>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-2 col-sm-1"></div>
-      <div class="col text-success">
-        {{subtitle | safe}}
-      </div>
-      <div class="col-md-2 col-sm-1"></div>
-    </div>
-    <div class="row">
-      <div class="col-md-2 col-sm-1"></div>
-      <div class="col text-success">
-          <p class="bg-white text-secondary">Welcome to Been There!</p>
-      </div>
-      <div class="col-md-2 col-sm-1"></div>
-    </div>
-  </div>
+{%  extends 'navbar.html' %}
+
+{% block content %}
+
+<body style="background:burlywood">
+    <h1 style="color: black">Welcome to Been There!</h1>
+    <h2 style="color: antiquewhite">Find your local history!</h2>
 </body>
-</html>
+
+{% endblock %}
