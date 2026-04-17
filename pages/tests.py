@@ -38,6 +38,13 @@ class HistoricSiteApiTests(TestCase):
         self.assertEqual(payload['count'], 1)
         self.assertEqual(payload['results'][0]['name'], self.site.name)
 
+    def test_site_list_can_filter_by_category(self):
+        response = self.client.get(reverse('site-list'), {'category': 'landmark'})
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload['count'], 1)
+
     def test_site_detail_returns_selected_site(self):
         response = self.client.get(reverse('site-detail', args=[self.site.id]))
 
@@ -59,3 +66,12 @@ class HistoricSiteApiTests(TestCase):
         payload = response.json()
         self.assertEqual(payload['count'], 1)
         self.assertIn('distance_miles', payload['results'][0])
+
+    def test_nearby_can_filter_by_category(self):
+        response = self.client.get(
+            reverse('site-nearby'),
+            {'lat': 39.80, 'lng': -89.64, 'radius': 5, 'category': 'landmark'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['count'], 1)

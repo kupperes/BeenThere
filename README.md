@@ -66,7 +66,17 @@ Secrets should not live in source control. The app now expects configuration lik
 This project is still in transition, but the current Django app can still be run in the usual way:
 
 ```bash
-python manage.py runserver
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python3 manage.py migrate
+python3 manage.py runserver
 ```
 
 Before doing that in a fresh environment, create a local `.env` file based on [`.env.example`](/Users/erickupper/Github/BeenThere/.env.example).
+
+The backend currently supports three database modes through environment variables:
+
+- `sqlite` for simple local development
+- `postgresql` for a standard PostgreSQL deployment path
+- `postgis` for the eventual geospatial production path

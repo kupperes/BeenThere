@@ -37,6 +37,10 @@ def env_flag(name, default=False):
     return value.lower() in {'1', 'true', 'yes', 'on'}
 
 
+def env_value(name, default=None):
+    return os.environ.get(name, default)
+
+
 load_env_file(os.path.join(BASE_DIR, '.env'))
 
 
@@ -71,6 +75,7 @@ X_FRAME_OPTIONS = 'DENY'
 
 INSTALLED_APPS = [
     'pages.apps.PagesConfig',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -114,11 +119,48 @@ WSGI_APPLICATION = 'BeenThere.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+DB_BACKEND = env_value('DJANGO_DB_BACKEND', 'sqlite')
+
+if DB_BACKEND == 'sqlite':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': env_value('DJANGO_DB_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
+        }
     }
+elif DB_BACKEND == 'postgresql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env_value('DJANGO_DB_NAME', 'beenthere'),
+            'USER': env_value('DJANGO_DB_USER', 'beenthere'),
+            'PASSWORD': env_value('DJANGO_DB_PASSWORD', ''),
+            'HOST': env_value('DJANGO_DB_HOST', 'localhost'),
+            'PORT': env_value('DJANGO_DB_PORT', '5432'),
+        }
+    }
+elif DB_BACKEND == 'postgis':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': env_value('DJANGO_DB_NAME', 'beenthere'),
+            'USER': env_value('DJANGO_DB_USER', 'beenthere'),
+            'PASSWORD': env_value('DJANGO_DB_PASSWORD', ''),
+            'HOST': env_value('DJANGO_DB_HOST', 'localhost'),
+            'PORT': env_value('DJANGO_DB_PORT', '5432'),
+        }
+    }
+else:
+    raise RuntimeError('Unsupported DJANGO_DB_BACKEND. Use sqlite, postgresql, or postgis.')
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
 }
 
 

@@ -1,40 +1,18 @@
 from math import atan2, cos, radians, sin, sqrt
 
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from rest_framework import status
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 
 from .models import HistoricSite
+from .serializers import HistoricSiteSerializer
 
 
 def home(request):
     context = {'subtitle': '<h2>Know Your Surroundings</h2>'}
     return render(request, 'home.html', context)
-
-
-def serialize_site(site, include_distance=False, distance_miles=None):
-    payload = {
-        'id': site.id,
-        'name': site.name,
-        'summary': site.summary,
-        'description': site.description,
-        'latitude': float(site.latitude),
-        'longitude': float(site.longitude),
-        'address': site.address,
-        'city': site.city,
-        'state': site.state,
-        'category': site.category,
-        'designation': site.designation,
-        'era': site.era,
-        'source_name': site.source_name,
-        'source_id': site.source_id,
-        'wikipedia_url': site.wikipedia_url,
-        'reference_url': site.reference_url,
-        'image_url': site.image_url,
-        'is_verified': site.is_verified,
-    }
-    if include_distance:
-        payload['distance_miles'] = distance_miles
-    return payload
 
 
 def haversine_miles(lat1, lon1, lat2, lon2):
@@ -49,8 +27,10 @@ def haversine_miles(lat1, lon1, lat2, lon2):
     return earth_radius_miles * c
 
 
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def api_root(request):
-    return JsonResponse({
+    return Response({
         'name': 'BeenThere API',
         'version': 'phase-1',
         'endpoints': {
@@ -61,36 +41,45 @@ def api_root(request):
     })
 
 
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def site_list(request):
     sites = HistoricSite.objects.all()
-    category = request.GET.get('category')
-    state = request.GET.get('state')
+    category = request.query_params.get('category')
+    state = request.query_params.get('state')
 
     if category:
         sites = sites.filter(category=category)
     if state:
         sites = sites.filter(state__iexact=state)
 
-    return JsonResponse({
+    serializer = HistoricSiteSerializer(sites, many=True)
+    return Response({
         'count': sites.count(),
-        'results': [serialize_site(site) for site in sites],
+        'results': serializer.data,
     })
 
 
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def site_detail(request, site_id):
     site = get_object_or_404(HistoricSite, pk=site_id)
-    return JsonResponse(serialize_site(site))
+    serializer = HistoricSiteSerializer(site)
+    return Response(serializer.data)
 
 
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def nearby_sites(request):
-    lat = request.GET.get('lat')
-    lng = request.GET.get('lng')
-    radius = request.GET.get('radius', '10')
+    lat = request.query_params.get('lat')
+    lng = request.query_params.get('lng')
+    radius = request.query_params.get('radius', '10')
+    category = request.query_params.get('category')
 
     if lat is None or lng is None:
-        return JsonResponse(
+        return Response(
             {'error': 'lat and lng query parameters are required'},
-            status=400,
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     try:
@@ -98,24 +87,27 @@ def nearby_sites(request):
         lng = float(lng)
         radius = float(radius)
     except ValueError:
-        return JsonResponse(
+        return Response(
             {'error': 'lat, lng, and radius must be numeric values'},
-            status=400,
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
+    sites = HistoricSite.objects.all()
+    if category:
+        sites = sites.filter(category=category)
+
     results = []
-    for site in HistoricSite.objects.all():
+    for site in sites:
         distance = haversine_miles(lat, lng, float(site.latitude), float(site.longitude))
         if distance <= radius:
+            site.distance_miles = round(distance, 2)
             results.append((distance, site))
 
     results.sort(key=lambda item: item[0])
-    serialized = [
-        serialize_site(site, include_distance=True, distance_miles=round(distance, 2))
-        for distance, site in results
-    ]
+    ordered_sites = [site for _, site in results]
+    serializer = HistoricSiteSerializer(ordered_sites, many=True)
 
-    return JsonResponse({
-        'count': len(serialized),
-        'results': serialized,
+    return Response({
+        'count': len(ordered_sites),
+        'results': serializer.data,
     })
