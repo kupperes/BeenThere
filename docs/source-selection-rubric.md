@@ -170,3 +170,21 @@ For each evaluated source, capture:
 - Maintenance cost: `1`
 - Total: `6`
 - Decision: `skip`
+
+### Example: National Park System unit catalog
+
+- Coverage value: `3`
+- Data quality: `2`
+- Geospatial quality: `1`
+- Licensing clarity: `3`
+- Refresh reliability: `2`
+- Maintenance cost: `2`
+- Total: `13`
+- Decision: `defer`
+
+Rationale:
+
+- This source adds meaningful national coverage for NPS-managed units and designation types such as battlefields, memorials, monuments, and national historical parks.
+- It is not fully duplicative of National Register data because it represents the park-system unit catalog rather than the preservation register.
+- It likely needs a purpose-built importer and deduplication work because some units will overlap existing register-backed records.
+- It is a strong follow-on national layer, but less ingestion-ready than the structured spreadsheet source already in use.

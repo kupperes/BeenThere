@@ -72,6 +72,12 @@ Acceptance criteria:
 - Source selection considers data quality, geographic value, licensing clarity, and maintenance cost.
 - Cities without a sufficient data-quality threshold can be explicitly deferred or skipped.
 
+### US-2.8 [ ] As a developer, I can ingest National Park System units as a distinct national source layer.
+Acceptance criteria:
+- The project supports a source definition or importer path for the NPS National Park System unit catalog.
+- NPS units can be distinguished from National Register listings even when some records overlap.
+- Overlapping NPS units and register-backed sites are deduplicated or linked intentionally.
+
 ## Phase 3: Nearby discovery
 
 ### US-3.1 [x] As a user, I can open the app and allow location access.

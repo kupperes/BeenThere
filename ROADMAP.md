@@ -122,6 +122,7 @@ High-value starting points:
 
 - National Register of Historic Places datasets
 - National Park Service open data
+- National Park System unit catalog
 - state historical marker programs
 - city and county open data portals
 - Smithsonian or Library of Congress collections where location data exists
@@ -131,6 +132,19 @@ Important note:
 Local historical marker coverage will likely be fragmented. Some cities publish clean GIS data; others may require one-off import scripts or manual curation.
 
 Local city and county sources should be selected with a repeatable rubric rather than added ad hoc. See [docs/source-selection-rubric.md](/Users/erickupper/Github/BeenThere/docs/source-selection-rubric.md).
+
+Current source inventory:
+
+- implemented: National Park Service National Register listed-properties spreadsheet
+- implemented: Kansas Historical Society historical markers
+- approved next source: [NPS National Park System](https://www.nps.gov/aboutus/national-park-system.htm)
+
+Why the NPS National Park System source is worth adding:
+
+- it adds NPS-managed unit and designation coverage
+- it includes categories like national battlefields, national historical parks, national historic sites, memorials, and monuments
+- it overlaps some National Register records, but it is not fully duplicative because it is a park-system catalog rather than a preservation-register listing
+- it should be added as a distinct source layer with deduplication against existing sites
 
 ## MVP feature set
 
