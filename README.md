@@ -26,6 +26,7 @@ There is now also an initial native iPhone scaffold in [ios/README.md](/Users/er
 
 - [Roadmap](/Users/erickupper/Github/BeenThere/ROADMAP.md)
 - [Architecture](/Users/erickupper/Github/BeenThere/docs/architecture.md)
+- [Data Sources](/Users/erickupper/Github/BeenThere/docs/data-sources.md)
 - [User Stories](/Users/erickupper/Github/BeenThere/docs/user-stories.md)
 - [Source Selection Rubric](/Users/erickupper/Github/BeenThere/docs/source-selection-rubric.md)
 - [Contributing](/Users/erickupper/Github/BeenThere/CONTRIBUTING.md)
@@ -127,3 +128,21 @@ python3 manage.py import_kansas_historical_markers
 
 This importer uses the Kansas Historical Society markers page:
 - [Kansas Historical Markers](https://www.kansashistory.gov/p/kansas-historical-markers/14999)
+
+## Current historical data sources
+
+The project currently has these source layers defined so far:
+
+- National Register sample dataset
+  - local seed data for development and tests
+- National Park Service National Register listed-properties spreadsheet
+  - official NPS / NRHP preservation-register layer
+- Kansas Historical Society historical markers
+  - official Kansas state marker layer
+
+The next approved national source to add is:
+
+- National Park System unit catalog
+  - source: [NPS National Park System](https://www.nps.gov/aboutus/national-park-system.htm)
+  - purpose: add NPS-managed units and designation types such as national battlefields, national historical parks, national historic sites, memorials, monuments, and related park-system units
+  - note: this overlaps with some National Register records, but it is not fully duplicative because it represents the National Park System as a managed-unit catalog rather than a register listing
