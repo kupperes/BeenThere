@@ -1,0 +1,53 @@
+[
+  {
+    "source_id": "nps-liho",
+    "name": "Lincoln Home National Historic Site",
+    "summary": "Abraham Lincoln lived here before becoming president.",
+    "description": "A preserved Springfield home tied to Lincoln and his family.",
+    "latitude": 39.7978,
+    "longitude": -89.6446,
+    "address": "426 South 7th Street",
+    "city": "Springfield",
+    "state": "Illinois",
+    "category": "landmark",
+    "designation": "National Historic Site",
+    "era": "19th century",
+    "wikipedia_url": "https://en.wikipedia.org/wiki/Lincoln_Home_National_Historic_Site",
+    "reference_url": "https://www.nps.gov/liho/index.htm",
+    "is_verified": true
+  },
+  {
+    "source_id": "nps-fobo",
+    "name": "Fort Bowie National Historic Site",
+    "summary": "A frontier military post connected to the Apache Wars in the American Southwest.",
+    "description": "Historic ruins and trails interpreting military and Indigenous history in Arizona.",
+    "latitude": 32.1464,
+    "longitude": -109.4477,
+    "address": "",
+    "city": "Bowie",
+    "state": "Arizona",
+    "category": "battlefield",
+    "designation": "National Historic Site",
+    "era": "19th century",
+    "wikipedia_url": "https://en.wikipedia.org/wiki/Fort_Bowie",
+    "reference_url": "https://www.nps.gov/fobo/index.htm",
+    "is_verified": true
+  },
+  {
+    "source_id": "nps-malu",
+    "name": "Martin Luther King, Jr. National Historical Park",
+    "summary": "This site preserves places tied to the life and legacy of Martin Luther King Jr.",
+    "description": "Includes King’s birth home, church, and memorial landscape in Atlanta.",
+    "latitude": 33.7553,
+    "longitude": -84.3732,
+    "address": "450 Auburn Avenue NE",
+    "city": "Atlanta",
+    "state": "Georgia",
+    "category": "memorial",
+    "designation": "National Historical Park",
+    "era": "20th century",
+    "wikipedia_url": "https://en.wikipedia.org/wiki/Martin_Luther_King_Jr._National_Historical_Park",
+    "reference_url": "https://www.nps.gov/malu/index.htm",
+    "is_verified": true
+  }
+]

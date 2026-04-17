@@ -20,11 +20,14 @@ This repository started as a small Django site and is now being reshaped into th
 
 The current codebase is still early-stage. Most of the product direction now lives in the project documentation.
 
+There is now also an initial native iPhone scaffold in [ios/README.md](/Users/erickupper/Github/BeenThere/ios/README.md) and [ios/BeenThere.xcodeproj/project.pbxproj](/Users/erickupper/Github/BeenThere/ios/BeenThere.xcodeproj/project.pbxproj) so we can begin Xcode work against the live Django API.
+
 ## Project docs
 
 - [Roadmap](/Users/erickupper/Github/BeenThere/ROADMAP.md)
 - [Architecture](/Users/erickupper/Github/BeenThere/docs/architecture.md)
 - [User Stories](/Users/erickupper/Github/BeenThere/docs/user-stories.md)
+- [Source Selection Rubric](/Users/erickupper/Github/BeenThere/docs/source-selection-rubric.md)
 - [Contributing](/Users/erickupper/Github/BeenThere/CONTRIBUTING.md)
 
 ## Product vision
@@ -50,6 +53,18 @@ The planned long-term shape is:
 - map-driven browsing with nearby search, detail cards, and visit tracking
 
 The backend should be built as an API-first service so the iPhone app can consume clean JSON contracts without depending on server-rendered Django pages. There is no planned Windows, Mac desktop, or general-purpose web client for this product.
+
+## iPhone scaffold
+
+The repo now includes a first-pass SwiftUI/Xcode scaffold with:
+
+- a map-first nearby screen using `MapKit`
+- foreground location permission handling
+- an API client aligned with the Django JSON endpoints
+- a place detail sheet with source links and visited actions
+- a collection/profile shell for auth and visit summaries
+
+Open [ios/BeenThere.xcodeproj/project.pbxproj](/Users/erickupper/Github/BeenThere/ios/BeenThere.xcodeproj/project.pbxproj) in Xcode to continue the iPhone client work.
 
 ## Early MVP target
 
@@ -80,3 +95,35 @@ The backend currently supports three database modes through environment variable
 - `sqlite` for simple local development
 - `postgresql` for a standard PostgreSQL deployment path
 - `postgis` for the eventual geospatial production path
+
+To load sample national historical sites into the catalog:
+
+```bash
+python3 manage.py import_sample_national_sites
+```
+
+After running that command, check:
+
+- [http://127.0.0.1:8000/api/sites/](http://127.0.0.1:8000/api/sites/)
+- [http://127.0.0.1:8000/api/sources/](http://127.0.0.1:8000/api/sources/)
+- [http://127.0.0.1:8000/api/import-runs/](http://127.0.0.1:8000/api/import-runs/)
+
+To import the approved official National Park Service National Register listed-properties spreadsheet:
+
+```bash
+python3 manage.py import_nps_nrhp_listed
+```
+
+This importer uses the approved NPS primary source from:
+- [NPS National Register Data Downloads](https://www.nps.gov/subjects/nationalregister/data-downloads.htm)
+
+Records imported from this spreadsheet may not always include public coordinates, so they can appear in site/detail APIs before they become eligible for nearby-map queries.
+
+To import the approved Kansas state marker source:
+
+```bash
+python3 manage.py import_kansas_historical_markers
+```
+
+This importer uses the Kansas Historical Society markers page:
+- [Kansas Historical Markers](https://www.kansashistory.gov/p/kansas-historical-markers/14999)

@@ -1,0 +1,104 @@
+{% extends 'navbar.html' %}
+
+{% block content %}
+<section style="padding: 24px; background: #f4efe4; min-height: 100vh; color: #1f1f1f;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <h1 style="margin-bottom: 8px;">Imported Site Browser</h1>
+    <p style="margin-top: 0; margin-bottom: 24px;">
+      Browse imported historic places with simple filters and pagination.
+    </p>
+
+    <form method="get" action="/sites/" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; background: #fffaf2; padding: 16px; border: 1px solid #d9ccb2; border-radius: 12px; margin-bottom: 24px;">
+      <label style="display: block;">
+        <span style="display: block; margin-bottom: 6px; font-weight: 600;">State</span>
+        <select name="state" style="width: 100%; padding: 10px; border: 1px solid #c7b79a; border-radius: 8px;">
+          <option value="">All states</option>
+          {% for state in state_options %}
+            <option value="{{ state }}" {% if selected_state == state %}selected{% endif %}>{{ state }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label style="display: block;">
+        <span style="display: block; margin-bottom: 6px; font-weight: 600;">Type</span>
+        <select name="type" style="width: 100%; padding: 10px; border: 1px solid #c7b79a; border-radius: 8px;">
+          <option value="">All types</option>
+          {% for designation in type_options %}
+            <option value="{{ designation }}" {% if selected_type == designation %}selected{% endif %}>{{ designation }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label style="display: block;">
+        <span style="display: block; margin-bottom: 6px; font-weight: 600;">Category</span>
+        <select name="category" style="width: 100%; padding: 10px; border: 1px solid #c7b79a; border-radius: 8px;">
+          <option value="">All categories</option>
+          {% for category in category_options %}
+            <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label style="display: block;">
+        <span style="display: block; margin-bottom: 6px; font-weight: 600;">Page size</span>
+        <select name="page_size" style="width: 100%; padding: 10px; border: 1px solid #c7b79a; border-radius: 8px;">
+          <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+          <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+          <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+        </select>
+      </label>
+
+      <div style="display: flex; gap: 12px; align-items: end;">
+        <button type="submit" style="padding: 10px 16px; border: none; border-radius: 8px; background: #285943; color: white; cursor: pointer;">Apply</button>
+        <a href="/sites/" style="padding: 10px 16px; border-radius: 8px; background: #d8ccb9; color: #1f1f1f; text-decoration: none;">Reset</a>
+      </div>
+    </form>
+
+    {% if error %}
+      <div style="background: #ffe5e5; color: #7a1f1f; border: 1px solid #e0a7a7; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <p style="margin-bottom: 16px;">
+      Showing page {{ page|default:1 }} of {{ total_pages|default:0 }}. Total matching sites: {{ count|default:0 }}.
+    </p>
+
+    <div style="display: grid; gap: 16px;">
+      {% for site in sites %}
+        <article style="background: white; border: 1px solid #d9ccb2; border-radius: 12px; padding: 16px;">
+          <h2 style="margin-top: 0; margin-bottom: 8px;">{{ site.name }}</h2>
+          <p style="margin: 0 0 8px 0; color: #5b554d;">
+            {{ site.city }}{% if site.city and site.state %}, {% endif %}{{ site.state }}
+          </p>
+          <p style="margin: 0 0 8px 0;"><strong>Type:</strong> {{ site.designation }}</p>
+          <p style="margin: 0 0 8px 0;"><strong>Category:</strong> {{ site.category }}</p>
+          <p style="margin: 0 0 8px 0;">{{ site.summary }}</p>
+          <p style="margin: 0; font-size: 0.95rem; color: #5b554d;">
+            <strong>Source:</strong> {{ site.source_name }}
+            {% if site.reference_url %}
+              • <a href="{{ site.reference_url }}" target="_blank" rel="noreferrer">Reference</a>
+            {% endif %}
+            {% if site.wikipedia_url %}
+              • <a href="{{ site.wikipedia_url }}" target="_blank" rel="noreferrer">Wikipedia</a>
+            {% endif %}
+          </p>
+        </article>
+      {% empty %}
+        <div style="background: white; border: 1px solid #d9ccb2; border-radius: 12px; padding: 16px;">
+          No sites matched the current filters.
+        </div>
+      {% endfor %}
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-top: 24px;">
+      {% if has_previous %}
+        <a href="?page={{ previous_page }}&page_size={{ page_size }}&state={{ selected_state }}&type={{ selected_type }}&category={{ selected_category }}" style="padding: 10px 16px; border-radius: 8px; background: #d8ccb9; color: #1f1f1f; text-decoration: none;">Previous</a>
+      {% endif %}
+      {% if has_next %}
+        <a href="?page={{ next_page }}&page_size={{ page_size }}&state={{ selected_state }}&type={{ selected_type }}&category={{ selected_category }}" style="padding: 10px 16px; border-radius: 8px; background: #285943; color: white; text-decoration: none;">Next</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

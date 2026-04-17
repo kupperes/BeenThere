@@ -130,6 +130,8 @@ High-value starting points:
 Important note:
 Local historical marker coverage will likely be fragmented. Some cities publish clean GIS data; others may require one-off import scripts or manual curation.
 
+Local city and county sources should be selected with a repeatable rubric rather than added ad hoc. See [docs/source-selection-rubric.md](/Users/erickupper/Github/BeenThere/docs/source-selection-rubric.md).
+
 ## MVP feature set
 
 The first version should stay very focused.
