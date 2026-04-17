@@ -16,16 +16,55 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def load_env_file(path):
+    if not os.path.exists(path):
+        return
+
+    with open(path) as env_file:
+        for raw_line in env_file:
+            line = raw_line.strip()
+            if not line or line.startswith('#') or '=' not in line:
+                continue
+
+            key, value = line.split('=', 1)
+            os.environ.setdefault(key.strip(), value.strip())
+
+
+def env_flag(name, default=False):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.lower() in {'1', 'true', 'yes', 'on'}
+
+
+load_env_file(os.path.join(BASE_DIR, '.env'))
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'za=72hugup9z)b^#x&%u-wngj8c(42nd3%1a87(cw4+kpk4f7g'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_flag('DJANGO_DEBUG', True)
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    if DEBUG:
+        # Safe only for local development. Production must supply a real secret.
+        SECRET_KEY = 'dev-only-insecure-secret-key-change-me'
+    else:
+        raise RuntimeError('DJANGO_SECRET_KEY must be set when DJANGO_DEBUG is false')
+
+ALLOWED_HOSTS = [
+    host.strip() for host in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+    if host.strip()
+]
+
+SESSION_COOKIE_SECURE = env_flag('DJANGO_SESSION_COOKIE_SECURE', not DEBUG)
+CSRF_COOKIE_SECURE = env_flag('DJANGO_CSRF_COOKIE_SECURE', not DEBUG)
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
 
 
 # Application definition

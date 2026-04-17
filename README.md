@@ -1,0 +1,72 @@
+# BeenThere
+
+BeenThere is an iPhone-only, location-aware history app concept that helps users discover what happened around them.
+
+The core experience is:
+
+- show the user's location on a map
+- overlay nearby landmarks, historical markers, and notable sites
+- let the user tap a place to read a short summary
+- link out to deeper reading like Wikipedia or source archives
+- let logged-in users mark places as visited
+- reward collection progress with badges and themed achievements
+
+## Current state
+
+This repository started as a small Django site and is now being reshaped into the foundation for:
+
+- a backend API for historical place data
+- a native iPhone client for the location and map experience
+
+The current codebase is still early-stage. Most of the product direction now lives in the project documentation.
+
+## Project docs
+
+- [Roadmap](/Users/erickupper/Github/BeenThere/ROADMAP.md)
+- [Architecture](/Users/erickupper/Github/BeenThere/docs/architecture.md)
+- [User Stories](/Users/erickupper/Github/BeenThere/docs/user-stories.md)
+- [Contributing](/Users/erickupper/Github/BeenThere/CONTRIBUTING.md)
+
+## Product vision
+
+BeenThere is meant to answer:
+
+"Where am I, and what important history happened near me?"
+
+It also adds a collection loop:
+
+- users can check off places they have visited
+- users build a personal history collection
+- users earn badges for collecting categories, regions, and themed sets
+
+## Planned architecture
+
+The planned long-term shape is:
+
+- Django + Django REST Framework backend
+- PostgreSQL + PostGIS for geospatial search
+- data ingestion pipelines for national and local historical datasets
+- native iPhone app in Xcode, likely using SwiftUI
+- map-driven browsing with nearby search, detail cards, and visit tracking
+
+The backend should be built as an API-first service so the iPhone app can consume clean JSON contracts without depending on server-rendered Django pages. There is no planned Windows, Mac desktop, or general-purpose web client for this product.
+
+## Early MVP target
+
+The first strong milestone is:
+
+"Show my location, the 20 closest historical places within 10 miles, and let me mark them as visited."
+
+## Security note
+
+Secrets should not live in source control. The app now expects configuration like `DJANGO_SECRET_KEY` to come from environment variables. Use [`.env.example`](/Users/erickupper/Github/BeenThere/.env.example) as a template for local development.
+
+## Local development
+
+This project is still in transition, but the current Django app can still be run in the usual way:
+
+```bash
+python manage.py runserver
+```
+
+Before doing that in a fresh environment, create a local `.env` file based on [`.env.example`](/Users/erickupper/Github/BeenThere/.env.example).
